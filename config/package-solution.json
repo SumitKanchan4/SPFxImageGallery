@@ -1,0 +1,10 @@
+{
+  "solution": {
+    "name": "image-gallery-client-side-solution",
+    "id": "c0c5969b-18bb-4226-ade3-77af0e63c5d8",
+    "version": "1.0.0.0"
+  },
+  "paths": {
+    "zippedPackage": "solution/image-gallery.sppkg"
+  }
+}

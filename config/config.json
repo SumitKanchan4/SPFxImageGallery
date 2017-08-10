@@ -1,0 +1,13 @@
+{
+  "entries": [
+    {
+      "entry": "./lib/webparts/imageGallery/ImageGalleryWebPart.js",
+      "manifest": "./src/webparts/imageGallery/ImageGalleryWebPart.manifest.json",
+      "outputPath": "./dist/image-gallery.bundle.js"
+    }
+  ],
+  "externals": {},
+  "localizedResources": {
+    "imageGalleryStrings": "webparts/imageGallery/loc/{locale}.js"
+  }
+}
