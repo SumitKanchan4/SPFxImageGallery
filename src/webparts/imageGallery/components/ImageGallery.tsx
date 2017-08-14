@@ -148,7 +148,7 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
       remainingItems -= 1;
 
       // after every max images per row count change the row
-      if (colCount == props.maxImage || remainingItems == 0) {
+      if (colCount == props.imageCountInRow || remainingItems == 0) {
         colCount = 0;
         row.push(column);
         column = [];

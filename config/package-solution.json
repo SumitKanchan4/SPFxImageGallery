@@ -1,10 +1,10 @@
 {
   "solution": {
-    "name": "image-gallery-client-side-solution",
+    "name": "Image Gallery By Sumit Kanchan",
     "id": "c0c5969b-18bb-4226-ade3-77af0e63c5d8",
-    "version": "1.0.0.0"
+    "version": "1.0.0.2"
   },
   "paths": {
-    "zippedPackage": "solution/image-gallery.sppkg"
+    "zippedPackage": "solution/image-gallery-by-Sumit-Kanchan.sppkg"
   }
 }
