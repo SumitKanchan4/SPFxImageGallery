@@ -8,9 +8,9 @@
   "manifestVersion": 2,
 
   "preconfiguredEntries": [{
-    "groupId": "9552dfae-6e06-43f3-867a-4bb2ceac6433",
-    "group": { "default": "Under Development" },
-    "title": { "default": "ImageGallery" },
+    "groupId": "f5b23167-8553-48a3-8b83-cda1b179d64d",
+    "group": { "default": "SPFX by Sumit Kanchan" },
+    "title": { "default": "Image Gallery" },
     "description": { "default": "Display the images on your webpart as you want" },
     "officeFabricIconFontName": "Page",
     "properties": { }
