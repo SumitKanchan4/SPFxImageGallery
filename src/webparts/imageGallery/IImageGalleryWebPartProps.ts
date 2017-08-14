@@ -3,4 +3,5 @@ export interface IImageGalleryWebPartProps {
   imageCountInRow: string;
   maxImage: string;
   createLink:boolean;
+  layout:string;
 }

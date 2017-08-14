@@ -8,9 +8,11 @@ import {
   IPropertyPaneDropdownOption,
   PropertyPaneDropdown,
   PropertyPaneSlider,
-  PropertyPaneToggle
+  PropertyPaneToggle,
+  PropertyPaneChoiceGroup,
+  IPropertyPaneChoiceGroupOption
 } from '@microsoft/sp-webpart-base';
-import { SPListOperations, BaseTemplate } from 'spfxhelper';
+import { SPListOperations, BaseTemplate, SPHelperCommon } from 'spfxhelper';
 
 import * as strings from 'imageGalleryStrings';
 import ImageGallery from './components/ImageGallery';
@@ -23,6 +25,24 @@ export default class ImageGalleryWebPart extends BaseClientSideWebPart<IImageGal
   private listsFetched: boolean = false;
   private dropdownOptions: IPropertyPaneDropdownOption[];
 
+  private _choicGroup: IPropertyPaneChoiceGroupOption[];
+  private get choiceOptions(): IPropertyPaneChoiceGroupOption[] {
+
+    if (SPHelperCommon.isNull(this._choicGroup)) {
+      var options: Array<IPropertyPaneChoiceGroupOption> = new Array<IPropertyPaneChoiceGroupOption>();
+
+      let imgCarousel: string = "https://spoprod-a.akamaihd.net/files/sp-client-prod_2017-08-04.008/image_choicegroup_carousel_82b63fce.png";
+      let imgTiles: string = "https://spoprod-a.akamaihd.net/files/sp-client-prod_2017-08-04.008/image_choicegroup_grid_0503466b.png";
+      options.push({ checked: true, imageSrc: imgCarousel, key: "Carousel", text: "Carousel", selectedImageSrc: imgCarousel });
+      options.push({ checked: false, imageSrc: imgTiles, key: "Grid", text: "Grid", selectedImageSrc: imgTiles });
+      this._choicGroup = options;
+    }
+    return this._choicGroup;
+  }
+
+  private get disableRowCount(): boolean{
+    return this.properties.layout == 'Carousel' ? true : false;
+  }
 
   public render(): void {
     const element: React.ReactElement<IImageGalleryProps> = React.createElement(
@@ -98,13 +118,18 @@ export default class ImageGalleryWebPart extends BaseClientSideWebPart<IImageGal
                   label: 'Enter the name of the library',
                   options: this.dropdownOptions
                 }),
+                PropertyPaneChoiceGroup('layout', {
+                  label: 'Layout',
+                  options: this.choiceOptions
+                }),
                 PropertyPaneSlider('imageCountInRow', {
                   label: "Select the max number of images in a row",
                   max: 6,
                   min: 1,
                   step: 1,
                   showValue: true,
-                  value: 3
+                  value: 3,
+                  disabled: this.disableRowCount
                 }),
                 PropertyPaneTextField('maxImage', {
                   label: 'Enter the max images to be shown (0 to show all)',
