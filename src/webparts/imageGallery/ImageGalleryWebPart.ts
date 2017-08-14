@@ -31,8 +31,6 @@ export default class ImageGalleryWebPart extends BaseClientSideWebPart<IImageGal
         libName: this.properties.libName,
         imageCountInRow: parseInt(this.properties.imageCountInRow),
         maxImage: parseInt(this.properties.maxImage),
-        imgHeight: this.properties.imgHeight,
-        imgWidth: this.properties.imgWidth,
         createLink: this.properties.createLink,
         spHttpClient: this.context.spHttpClient,
         webUrl: this.context.pageContext.web.absoluteUrl
@@ -106,20 +104,10 @@ export default class ImageGalleryWebPart extends BaseClientSideWebPart<IImageGal
                   min: 1,
                   step: 1,
                   showValue: true,
-                  value: 0
+                  value: 3
                 }),
                 PropertyPaneTextField('maxImage', {
                   label: 'Enter the max images to be shown (0 to show all)',
-                  onGetErrorMessage: this.validateInput.bind(this),
-                  value: '0'
-                }),
-                PropertyPaneTextField('imgHeight', {
-                  label: 'Custom Height (0 to be auto)',
-                  onGetErrorMessage: this.validateInput.bind(this),
-                  value: '0'
-                }),
-                PropertyPaneTextField('imgWidth', {
-                  label: 'Custom Width (0 to be auto)',
                   onGetErrorMessage: this.validateInput.bind(this),
                   value: '0'
                 }),

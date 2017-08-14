@@ -2,8 +2,6 @@ interface IImageGalleryProps {
   libName: string;
   imageCountInRow: number;
   maxImage: number;
-  imgHeight: string;
-  imgWidth: string;
   createLink: boolean;
   spHttpClient: any;
   webUrl: string;
@@ -18,6 +16,7 @@ interface IImageDetails {
 interface IImageState {
   imageDetails?: any[];
   showLoading: boolean;
+  status?:string;
 }
 
 export { IImageGalleryProps, IImageDetails, IImageState };

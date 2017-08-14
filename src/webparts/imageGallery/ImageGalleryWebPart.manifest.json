@@ -13,9 +13,6 @@
     "title": { "default": "ImageGallery" },
     "description": { "default": "Display the images on your webpart as you want" },
     "officeFabricIconFontName": "Page",
-    "properties": {
-      "description": "ImageGallery",
-      "libName": "Test"
-    }
+    "properties": { }
   }]
 }

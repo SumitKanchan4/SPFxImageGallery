@@ -1,14 +1,14 @@
 /* tslint:disable */
 require('./ImageGallery.module.css');
 const styles = {
-  imageGallery: 'imageGallery_b0a88fda',
-  container: 'container_b0a88fda',
-  boxShadow: 'boxShadow_b0a88fda',
-  heading: 'heading_b0a88fda',
-  padding: 'padding_b0a88fda',
-  hide: 'hide_b0a88fda',
-  show: 'show_b0a88fda',
-  colBlack: 'colBlack_b0a88fda',
+  imageGallery: 'imageGallery_23f2b51a',
+  container: 'container_23f2b51a',
+  boxShadow: 'boxShadow_23f2b51a',
+  heading: 'heading_23f2b51a',
+  padding: 'padding_23f2b51a',
+  hide: 'hide_23f2b51a',
+  show: 'show_23f2b51a',
+  colBlack: 'colBlack_23f2b51a',
 };
 
 export default styles;

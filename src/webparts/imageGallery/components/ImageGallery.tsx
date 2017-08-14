@@ -13,7 +13,8 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
 
     this.state = {
       imageDetails: [],
-      showLoading: true
+      showLoading: true,
+      status:''
     };
   }
 
@@ -75,7 +76,7 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
                   this.state.showLoading ?
                     <Spinner size={SpinnerSize.large} className={`${styles.padding}`} />
                     :
-                    <div></div>
+                    <div>{this.state.status}</div>
                 }
               </div>
           }
@@ -84,7 +85,7 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
     );
   }
 
-  protected componentWillRecieveProps(nextProps: IImageGalleryProps, nextContext: any): void {
+  protected componentWillReceiveProps(nextProps: IImageGalleryProps, nextContext: any): void {
     this.getLibItems(nextProps);
   }
 
@@ -99,8 +100,8 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
   private getLibItems(props: IImageGalleryProps): void {
     try {
 
-      this.setState({ showLoading: true })
-      if (this.validateColumn()) {
+      this.setState({ showLoading: true, status: 'Fetching Data...' });
+      if (this.validateColumn() && !SPHelperCommon.isStringNullOrEmpy(props.libName)) {
 
         var query = this.getQuery(props);
         let imgDetails: IImageDetails[] = [];
@@ -110,7 +111,7 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
           response.result.forEach(item => {
             imgDetails.push({
               imageUrl: item.File.ServerRelativeUrl,
-              redirectLink: props.createLink ? item.Redirect_x0020_Link : '#',
+              redirectLink: this.createRedirectLink ? item.Redirect_x0020_Link : '',
               title: SPHelperCommon.isStringNullOrEmpy(item.Title) ? '' : item.Title
             });
           });
@@ -120,7 +121,7 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
         });
       }
       else {
-        this.setState({ showLoading: false });
+        this.setState({ showLoading: false, status: 'Please configure webpart...' });
       }
     } catch (error) {
       alert(JSON.stringify(error));
@@ -164,7 +165,7 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
 
     var query: string = `?$expand=File&$select=Title,File/ServerRelativeUrl`;
 
-    if (props.createLink) {
+    if (this.createRedirectLink) {
       query += ",Redirect";
     }
     if (props.maxImage > 0) {
