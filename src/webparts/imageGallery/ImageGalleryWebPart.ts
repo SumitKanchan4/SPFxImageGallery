@@ -33,8 +33,11 @@ export default class ImageGalleryWebPart extends BaseClientSideWebPart<IImageGal
 
       let imgCarousel: string = "https://spoprod-a.akamaihd.net/files/sp-client-prod_2017-08-04.008/image_choicegroup_carousel_82b63fce.png";
       let imgTiles: string = "https://spoprod-a.akamaihd.net/files/sp-client-prod_2017-08-04.008/image_choicegroup_grid_0503466b.png";
+      let imgList:string = 'https://spoprod-a.akamaihd.net/files/sp-client-prod_2017-08-04.008/image_choicegroup_list_f5a84202.png';
+
       options.push({ checked: true, imageSrc: imgCarousel, key: "Carousel", text: "Carousel", selectedImageSrc: imgCarousel });
       options.push({ checked: false, imageSrc: imgTiles, key: "Grid", text: "Grid", selectedImageSrc: imgTiles });
+      options.push({ checked: false, imageSrc: imgList, key: "List", text: "List", selectedImageSrc: imgList });
       this._choicGroup = options;
     }
     return this._choicGroup;
@@ -132,7 +135,7 @@ export default class ImageGalleryWebPart extends BaseClientSideWebPart<IImageGal
                   step: 1,
                   showValue: true,
                   value: 3,
-                  disabled: this.disableRowCount
+                  disabled: this.properties.layout != 'Grid'
                 }),
                 PropertyPaneTextField('maxImage', {
                   label: 'Enter the max images to be shown (0 to show all)',
@@ -150,7 +153,7 @@ export default class ImageGalleryWebPart extends BaseClientSideWebPart<IImageGal
                   checked: true,
                   offText: 'Autorotate  Off',
                   onText: 'Autorotate On',
-                  disabled: !this.disableRowCount
+                  disabled: this.properties.layout != 'Carousel'
                 })
               ]
             }

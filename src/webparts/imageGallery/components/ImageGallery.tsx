@@ -41,7 +41,10 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
           this.props.layout == 'Carousel' ?
             this.generateCarousel()
             :
-            this.generateGrid()
+            this.props.layout == 'Grid' ?
+              this.generateGrid()
+              :
+              this.generateList()
         }
       </div>
     );
@@ -107,63 +110,158 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
   private generateCarousel(): React.ReactElement<IImageGalleryProps> {
     return (
       <div className={styles.carousel} >
-        <div className={`ms-Grid`}>
-          {
-            !this.state.showLoading ?
-              this.state.imageDetails.length > 0 ?
+        <div className={styles.carouselContainer}>
+          <div className={`ms-Grid`}>
+            {
+              !this.state.showLoading ?
+                this.state.imageDetails.length > 0 ?
 
-                <div className={`ms-Grid-row`}>
-                  <div className={`ms-Grid-col ms-u-sm12`}>
-                    <div id='legoSlider' className={styles.legoSlider}>
-                      {this.state.imageDetails.length > 1 ? <Link className={styles.control_next}>&#10095;</Link> : <div></div>}
-                      {this.state.imageDetails.length > 1 ? <Link className={styles.control_prev}>&#10094;</Link> : <div></div>}
+                  <div className={`ms-Grid-row`}>
+                    <div className={`ms-Grid-col ms-u-sm12`}>
+                      <div id='legoSlider' className={styles.legoSlider}>
+                        {this.state.imageDetails.length > 1 ? <Link className={styles.control_next}>&#10095;</Link> : <div></div>}
+                        {this.state.imageDetails.length > 1 ? <Link className={styles.control_prev}>&#10094;</Link> : <div></div>}
 
-                      <ul ref='ulSlider'>
-                        {
-                          this.state.imageDetails.map((item) => {
-                            return (
-                              <li>
-                                {
-                                  // # reloads on IE on click so if there is no link then do not add href (href presence generate a tag else button tag)
-                                  !SPHelperCommon.isStringNullOrEmpy(item.redirectLink) && item.redirectLink != '#' ?
-                                    <Link href={item.redirectLink}>
-                                      <Image src={item.imageUrl} role='presentation' />
-                                      <div className={styles.text}>{item.title}</div>
-                                    </Link>
-                                    :
-                                    <Link>
-                                      <Image src={item.imageUrl} role='presentation' />
-                                      <div className={styles.text}>{item.title}</div>
-                                    </Link>
-                                }
-                              </li>
-                            );
-                          })
-                        }
-                      </ul>
+                        <ul ref='ulSlider'>
+                          {
+                            this.state.imageDetails.map((item) => {
+                              return (
+                                <li>
+                                  {
+                                    // # reloads on IE on click so if there is no link then do not add href (href presence generate a tag else button tag)
+                                    !SPHelperCommon.isStringNullOrEmpy(item.redirectLink) && item.redirectLink != '#' ?
+                                      <Link href={item.redirectLink}>
+                                        <Image src={item.imageUrl} role='presentation' />
+                                        <div className={styles.text}>{item.title}</div>
+                                      </Link>
+                                      :
+                                      <Link>
+                                        <Image src={item.imageUrl} role='presentation' />
+                                        <div className={styles.text}>{item.title}</div>
+                                      </Link>
+                                  }
+                                </li>
+                              );
+                            })
+                          }
+                        </ul>
+                      </div>
                     </div>
                   </div>
-                </div>
-                : // Else part if the count == 0
+                  : // Else part if the count == 0
 
-                <div className={`ms-Grid-row`}>
-                  <div className={`ms-Grid-col ms-u-mdPush4 ms-u-md5 ms-u-smPush2 ms-u-sm10 ms-font-m-plus`}>
-                    <span>No images found in library</span>
+                  <div className={`ms-Grid-row`}>
+                    <div className={`ms-Grid-col ms-u-mdPush4 ms-u-md5 ms-u-smPush2 ms-u-sm10 ms-font-m-plus`}>
+                      <span>No images found in library</span>
+                    </div>
                   </div>
-                </div>
-              :
-              <Spinner size={SpinnerSize.large} />
-          }
+                :
+                <Spinner size={SpinnerSize.large} />
+            }
+          </div>
         </div>
       </div >
     );
   }
 
+  private generateList(): React.ReactElement<IImageGalleryProps> {
+    return (
+      <div className={styles.list}>
+        <div className={styles.container}>
+          <div className={`ms-Grid`}>
+            {
+              !this.state.showLoading ?
+                this.state.imageDetails.length > 0 ?
+                  <div className={`ms-Grid-row`}>
+                    {
+                      this.state.imageDetails.map((item) => {
+                        return (
+                          <div className={`ms-Grid-col ms-u-sm12`}>
+                            <div className={`ms-Grid`}>
+                              <div className={`ms-Grid-row`}>
+                                <div className={`ms-Grid-col ms-u-sm5`}>
+                                  {/* Display Image */}
+                                  <div className={styles.boxShadow}>
+                                    {
+                                      SPHelperCommon.isStringNullOrEmpy(item.redirectLink) || item.redirectLink == '#'
+                                        ?
+                                        <Link href={item.redirectLink} target='_blank'>
+                                          <Image src={item.imageUrl} role='presentation' />
+                                        </Link>
+                                        :
+                                        <Link>
+                                          <Image src={item.imageUrl} role='presentation' />
+                                        </Link>
+                                    }
+                                  </div>
+                                </div>
+                                <div className={`ms-Grid-col ms-u-sm7`}>
+                                  <div className={`ms-Grid`}>
+                                    <div className={`ms-Grid-row`}>
+                                      <div className={`ms-Grid-col ms-u-sm12`}>
+                                        {
+                                          SPHelperCommon.isStringNullOrEmpy(item.redirectLink) || item.redirectLink == '#'
+                                            ?
+                                            <Link>
+                                              <h2>{item.title}</h2>
+                                            </Link>
+                                            :
+                                            <Link href={item.redirectLink} target='_blank'>
+                                              <h2>{item.title}</h2>
+                                            </Link>
+                                        }
+
+                                      </div>
+                                    </div>
+                                    <div className={`ms-Grid-row`}>
+                                      <div className={`ms-Grid-col ms-u-sm12 ms-hiddenSm`}>
+                                        <div>{item.description}</div>
+                                      </div>
+                                    </div>
+                                    {
+                                      SPHelperCommon.isStringNullOrEmpy(item.redirectLink) || item.redirectLink == '#'
+                                        ?
+                                        <div className={`ms-Grid-row`}>
+                                          <div className={`ms-Grid-col ms-u-sm12 ms-hiddenSm`}>
+                                            <Link href={item.redirectLink} target='_blank' className={styles.width100}>
+                                              <div className={styles.fRight}>Read More..</div>
+                                            </Link>
+                                          </div>
+                                        </div>
+                                        :
+                                        <div></div>
+                                    }
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })
+                    }
+                  </div>
+                  :
+                  <div className={`ms-Grid-row`}>
+                    <div className={`ms-Grid-col ms-u-mdPush4 ms-u-md5 ms-u-smPush2 ms-u-sm10 ms-font-m-plus`}>
+                      <span>No images found in library</span>
+                    </div>
+                  </div>
+                :
+                <Spinner size={SpinnerSize.large} />
+            }
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   protected componentWillReceiveProps(nextProps: IImageGalleryProps, nextContext: any): void {
+    this.setState({ showLoading: true, imageDetails: [] as any });
     this.getLibItems(nextProps);
   }
 
   protected componentDidMount(): void {
+    this.setState({ showLoading: true, imageDetails: [] as any });
     this.getLibItems(this.props);
   }
 
@@ -186,7 +284,8 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
             imgDetails.push({
               imageUrl: item.File.ServerRelativeUrl,
               redirectLink: this.createRedirectLink ? item.Redirect_x0020_Link : '',
-              title: SPHelperCommon.isStringNullOrEmpy(item.Title) ? '' : item.Title
+              title: SPHelperCommon.isStringNullOrEmpy(item.Title) ? '' : item.Title,
+              description: !SPHelperCommon.isStringNullOrEmpy(item.Description) && item.Description.length > 230 ? item.Description.slice(0, 230) + '...' : item.Description
             });
           });
 
@@ -210,6 +309,9 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
         break;
       case 'Grid':
         this.createGrid(imgdetails, props);
+        break;
+      case 'List':
+        this.setState({ showLoading: false, imageDetails: imgdetails as any[] });
         break;
     }
   }
@@ -291,13 +393,13 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
    */
   private getQuery(props: IImageGalleryProps): string {
 
-    var query: string = `?$expand=File&$select=Title,File/ServerRelativeUrl`;
+    var query: string = `?$expand=File&$select=Title,File/ServerRelativeUrl,Description`;
 
     if (this.createRedirectLink) {
       query += ",Redirect";
     }
     if (props.maxImage > 0) {
-      query += "&$top=" + this.props.maxImage;
+      query += `&$top=${props.maxImage}`;
     }
 
     return query;

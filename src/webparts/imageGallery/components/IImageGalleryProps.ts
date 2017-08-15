@@ -13,6 +13,7 @@ interface IImageDetails {
   title: string;
   imageUrl: string;
   redirectLink?: string;
+  description?:string;
 }
 
 interface IImageState {

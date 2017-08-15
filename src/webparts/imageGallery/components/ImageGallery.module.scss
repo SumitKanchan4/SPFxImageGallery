@@ -2,7 +2,7 @@
     .container {
     margin: 0px auto;
 
-.boxShadow{
+    .boxShadow{
         position: relative;
         -moz-box-shadow: 0px 2px 4px rgba(0, 0, 0,0.5);
         -webkit-box-shadow: 0px 2px 4px rgba(0, 0, 0, .5);
@@ -20,18 +20,7 @@
       }
     }
 
-    .boxShadow::after {
-      content: '';
-      position: absolute;
-      z-index: -1; /* hide shadow behind image */
-      -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
-      -moz-box-shadow: 0 15px 20px rgba(0, 0, 0, 0.3);
-      box-shadow: 0 15px 20px rgba(0, 0, 0, 0.3);                
-      width: 70%; 
-      left: 15%; /* one half of the remaining 30% */
-      height: 100px;
-      bottom: 0;
-    }
+    
 
     .heading{
       text-align: center;
@@ -44,6 +33,7 @@
     .hide{
       display: none;
     }
+
     .show{
       display: block;
     }
@@ -51,7 +41,6 @@
     .colBlack{
       color: rgba(102, 102, 102, 1);
     }
-
   }
 }
 
@@ -61,7 +50,7 @@ $break-large: 640px;
 $break-xLarge: 1280px;
 
 .carousel{
-    .container{
+    .carouselContainer{
         margin: 0px auto;
         max-width: 1280px;
         max-height: 420px;
@@ -121,12 +110,13 @@ $break-xLarge: 1280px;
                 .text {
                     color: #f2f2f2;
                     font-size: 15px;
-                    padding: 8px 12px;
+                    padding: 10px 0px;
                     position: absolute;
-                    bottom: -30%;
+                    bottom: -0%;
                     width: 100%;
                     text-align: center;
                     font-weight: bold;
+                    background-color: black;
                     @media screen and (max-width: $break-medium){
                         display:none;
                     }
@@ -180,4 +170,41 @@ $break-xLarge: 1280px;
     .center{
         text-align: center;
     }    
+}
+
+.list{
+    .listContainer{
+        margin: 0px auto;
+        width: 100%;
+    }
+     .boxShadow{
+        position: relative;
+        -moz-box-shadow: 0px 2px 4px rgba(0, 0, 0,0.5);
+        -webkit-box-shadow: 0px 2px 4px rgba(0, 0, 0, .5);
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, .5);
+        padding: 5px;
+        background: white;
+        border:0;
+        width: 100%;
+        max-width: 90%;        
+        transition: 2;
+        border-radius: 6px;
+        margin: 0 0 10px 0;
+      img {
+        width: 100%;
+      }
+    }    
+    img{
+        max-width:100%;
+    }
+    h2{
+        margin-top: 0px ;
+    }
+    .fRight{        
+        float: right;
+    }
+    .width100{
+        width:100%;
+    }
+
 }

@@ -13,6 +13,8 @@
     "title": { "default": "Image Gallery" },
     "description": { "default": "Display the images on your webpart as you want" },
     "officeFabricIconFontName": "Page",
-    "properties": { }
+    "properties": {
+      "layout": "Grid"
+     }
   }]
 }
