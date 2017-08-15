@@ -219,7 +219,7 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
                                       </div>
                                     </div>
                                     {
-                                      SPHelperCommon.isStringNullOrEmpy(item.redirectLink) || item.redirectLink == '#'
+                                      !SPHelperCommon.isStringNullOrEmpy(item.redirectLink) || item.redirectLink != '#'
                                         ?
                                         <div className={`ms-Grid-row`}>
                                           <div className={`ms-Grid-col ms-u-sm12 ms-hiddenSm`}>
