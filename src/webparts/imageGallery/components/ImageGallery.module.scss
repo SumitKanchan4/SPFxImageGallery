@@ -54,3 +54,130 @@
 
   }
 }
+
+$break-small: 320px;
+$break-medium: 480px;
+$break-large: 640px;
+$break-xLarge: 1280px;
+
+.carousel{
+    .container{
+        margin: 0px auto;
+        max-width: 1280px;
+        max-height: 420px;
+        width: 100%;
+    }
+    
+    .legoSlider {
+        position: relative;
+        overflow: hidden;
+        margin: 20px auto 0 auto;
+        border-radius: 14px;
+        height: 420px;
+        @media screen and (max-width: $break-medium){
+            height: 120px;
+            margin: 0;
+            border-radius: 4px;
+        }
+
+        ul {
+            position: relative;
+            margin: 0;
+            padding: 0;
+            height: 420px;            
+            list-style: none;
+            @media screen and (max-width: $break-medium){
+                height: 100%;
+            }
+
+            li {
+                position: relative;
+                max-width: 1280px;
+                display: block;
+                float: left;
+                margin: 0;
+                padding: 0;
+                width: 100%;
+                height:100%;
+                max-height: 420px;
+                background: #ccc;
+                text-align: center;
+                line-height: 300px;
+                 @media screen and (max-width: $break-medium){
+                    line-height: 100px;
+                }
+
+                button{
+                    width: 100%;
+                }
+
+                img {
+                    width: 100%;
+                    max-height: 420px;
+                    height: 100%;
+                    flex: 1;
+                }
+
+                .text {
+                    color: #f2f2f2;
+                    font-size: 15px;
+                    padding: 8px 12px;
+                    position: absolute;
+                    bottom: -30%;
+                    width: 100%;
+                    text-align: center;
+                    font-weight: bold;
+                    @media screen and (max-width: $break-medium){
+                        display:none;
+                    }
+                }
+            }
+        }   
+    }
+
+    
+
+   a.control_prev, a.control_next, button.control_prev, button.control_next {
+
+        position: absolute;
+        top: 40%;
+        z-index: 999;
+        display: block;
+        padding: 2% 2%;
+        width: auto;
+        height: auto;
+        color: #fff;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 18px;
+        opacity: 0.8;
+        cursor: pointer;
+        transition: 0.6s ease;
+    }
+
+    a.control_prev:hover, a.control_next:hover, button.control_prev:hover, button.control_next:hover {
+        opacity: 1;
+        -webkit-transition: all 0.2s ease;
+        background-color: rgba(0,0,0,0.8);
+    }
+
+    a.control_prev, button.control_prev {
+        border-radius: 0 2px 2px 0;
+    }
+
+    a.control_next, button.control_next {
+        right: 0;
+        border-radius: 2px 0 0 2px;
+    }
+
+    .slider_option {
+        position: relative;
+        margin: 10px auto;
+        width: 160px;
+        font-size: 18px;
+    }
+
+    .center{
+        text-align: center;
+    }    
+}

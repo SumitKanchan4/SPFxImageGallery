@@ -40,7 +40,7 @@ export default class ImageGalleryWebPart extends BaseClientSideWebPart<IImageGal
     return this._choicGroup;
   }
 
-  private get disableRowCount(): boolean{
+  private get disableRowCount(): boolean {
     return this.properties.layout == 'Carousel' ? true : false;
   }
 
@@ -53,10 +53,13 @@ export default class ImageGalleryWebPart extends BaseClientSideWebPart<IImageGal
         maxImage: parseInt(this.properties.maxImage),
         createLink: this.properties.createLink,
         spHttpClient: this.context.spHttpClient,
-        webUrl: this.context.pageContext.web.absoluteUrl
+        webUrl: this.context.pageContext.web.absoluteUrl,
+        layout: this.properties.layout,
+        autoRotate: this.properties.autoRotate
       }
     );
 
+    
     ReactDom.render(element, this.domElement);
   }
 
@@ -141,6 +144,13 @@ export default class ImageGalleryWebPart extends BaseClientSideWebPart<IImageGal
                   checked: true,
                   offText: 'No redirect link will be created on the image',
                   onText: 'To create a redirect link need to have a "Redirect" (single line of text) column in the library'
+                }),
+                PropertyPaneToggle('autoRotate', {
+                  label: 'Autorotates the carousel',
+                  checked: true,
+                  offText: 'Autorotate  Off',
+                  onText: 'Autorotate On',
+                  disabled: !this.disableRowCount
                 })
               ]
             }

@@ -5,6 +5,8 @@ interface IImageGalleryProps {
   createLink: boolean;
   spHttpClient: any;
   webUrl: string;
+  layout:string;
+  autoRotate:boolean;
 }
 
 interface IImageDetails {
@@ -17,6 +19,7 @@ interface IImageState {
   imageDetails?: any[];
   showLoading: boolean;
   status?:string;
+  intervalID?: number;
 }
 
 export { IImageGalleryProps, IImageDetails, IImageState };

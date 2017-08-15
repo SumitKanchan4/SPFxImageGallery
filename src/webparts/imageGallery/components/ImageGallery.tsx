@@ -5,6 +5,7 @@ import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner';
 import { SPListOperations, SPFieldOperations, SPHelperCommon } from 'spfxhelper';
 import { Link } from 'office-ui-fabric-react/lib/Link';
 import { Image } from 'office-ui-fabric-react/lib/Image';
+import * as $ from 'jquery';
 
 export default class ImageGallery extends React.Component<IImageGalleryProps, IImageState> {
 
@@ -14,7 +15,8 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
     this.state = {
       imageDetails: [],
       showLoading: true,
-      status:''
+      status: '',
+      intervalID: 0
     };
   }
 
@@ -26,9 +28,26 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
     return SPFieldOperations.getInstance(this.props.spHttpClient, this.props.webUrl);
   }
 
+  private animateDuration: number = 1000;
+  private autoRotateDuration: number = 5000;
+  private interval: number = 0;
+
   private createRedirectLink: boolean = false;
 
   public render(): React.ReactElement<IImageGalleryProps> {
+    return (
+      <div>
+        {
+          this.props.layout == 'Carousel' ?
+            this.generateCarousel()
+            :
+            this.generateGrid()
+        }
+      </div>
+    );
+  }
+
+  private generateGrid(): React.ReactElement<IImageGalleryProps> {
     return (
       <div className={styles.imageGallery}>
         <div className={styles.container}>
@@ -85,6 +104,61 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
     );
   }
 
+  private generateCarousel(): React.ReactElement<IImageGalleryProps> {
+    return (
+      <div className={styles.carousel} >
+        <div className={`ms-Grid`}>
+          {
+            !this.state.showLoading ?
+              this.state.imageDetails.length > 0 ?
+
+                <div className={`ms-Grid-row`}>
+                  <div className={`ms-Grid-col ms-u-sm12`}>
+                    <div id='legoSlider' className={styles.legoSlider}>
+                      {this.state.imageDetails.length > 1 ? <Link className={styles.control_next}>&#10095;</Link> : <div></div>}
+                      {this.state.imageDetails.length > 1 ? <Link className={styles.control_prev}>&#10094;</Link> : <div></div>}
+
+                      <ul ref='ulSlider'>
+                        {
+                          this.state.imageDetails.map((item) => {
+                            return (
+                              <li>
+                                {
+                                  // # reloads on IE on click so if there is no link then do not add href (href presence generate a tag else button tag)
+                                  !SPHelperCommon.isStringNullOrEmpy(item.redirectLink) && item.redirectLink != '#' ?
+                                    <Link href={item.redirectLink}>
+                                      <Image src={item.imageUrl} role='presentation' />
+                                      <div className={styles.text}>{item.title}</div>
+                                    </Link>
+                                    :
+                                    <Link>
+                                      <Image src={item.imageUrl} role='presentation' />
+                                      <div className={styles.text}>{item.title}</div>
+                                    </Link>
+                                }
+                              </li>
+                            );
+                          })
+                        }
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                : // Else part if the count == 0
+
+                <div className={`ms-Grid-row`}>
+                  <div className={`ms-Grid-col ms-u-mdPush4 ms-u-md5 ms-u-smPush2 ms-u-sm10 ms-font-m-plus`}>
+                    <span>No images found in library</span>
+                  </div>
+                </div>
+              :
+              <Spinner size={SpinnerSize.large} />
+          }
+        </div>
+      </div >
+    );
+  }
+
   protected componentWillReceiveProps(nextProps: IImageGalleryProps, nextContext: any): void {
     this.getLibItems(nextProps);
   }
@@ -116,7 +190,7 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
             });
           });
 
-          this.create2DArray(imgDetails, props);
+          this.configureLayout(imgDetails, props);
 
         });
       }
@@ -128,12 +202,24 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
     }
   }
 
+  private configureLayout(imgdetails: IImageDetails[], props: IImageGalleryProps): void {
+
+    switch (props.layout) {
+      case 'Carousel':
+        this.createCarousel(imgdetails, props);
+        break;
+      case 'Grid':
+        this.createGrid(imgdetails, props);
+        break;
+    }
+  }
+
   /**
    * Creates a 2D array object so rows and columns can be created dynamically
    * @param imgdetails 
    * @param props 
    */
-  private create2DArray(imgdetails: IImageDetails[], props: IImageGalleryProps): void {
+  private createGrid(imgdetails: IImageDetails[], props: IImageGalleryProps): void {
 
     // Create an array of array to display selected number of images per row
     var remainingItems: number = imgdetails.length;
@@ -156,6 +242,48 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
     });
 
     this.setState({ imageDetails: row as any[], showLoading: false });
+  }
+
+  private createCarousel(imgdetails: IImageDetails[], props: IImageGalleryProps): void {
+
+    try {
+
+      this.setState({ showLoading: false, imageDetails: imgdetails as any[] });
+      this.stopAutoRotateCarousel();
+      // Perform the manipulation when the elements are created 
+      this.forceUpdate(() => {
+        var containerWidth = Math.floor($(`.${styles.carousel}`).innerWidth() * 0.90);
+        var containerHeight = Math.floor($(`.${styles.carousel}`).innerHeight() * 0.90);
+        var slideCount = $('#legoSlider ul li').length;
+        $('#legoSlider ul li').css({ width: containerWidth, height: containerHeight });
+        var slideWidth = $('#legoSlider ul li').width();
+        var slideHeight = $('#legoSlider ul li').height();
+        var sliderUlWidth = slideCount * slideWidth;
+
+        $('#legoSlider').css({ width: slideWidth, height: slideHeight });
+
+        // show only single image if there is only single item in the image library
+        if (imgdetails.length > 1) {
+          $('#legoSlider ul').css({ width: sliderUlWidth, marginLeft: - slideWidth });
+        }
+        else {
+          $('#legoSlider ul').css({ width: sliderUlWidth, marginLeft: 0 });
+        }
+        $('#legoSlider ul li:last-child').prependTo('#legoSlider ul');
+        $('#legoSlider ul li img').css({ width: containerWidth, height: containerHeight });
+
+        if (imgdetails.length > 1) {
+          this.registerEvents(imgdetails);
+
+          /** Start Autorotate only if the property is set to true */
+          this.startAutoRotateCarousel();
+        }
+      });
+
+    }
+    catch (error) {
+
+    }
   }
 
   /**
@@ -219,6 +347,131 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
       case 11:
       case 12:
         return `ms-u-md1`;
+    }
+  }
+
+  /** Method used to register events in the carousel */
+  private registerEvents(imgdetails: IImageDetails[]): void {
+    try {
+      /** Handling the click event of the carousel */
+      $(`.${styles.control_next}`).click((e) => {
+        this.stopAutoRotateCarousel();
+        this.showNext();
+        this.startAutoRotateCarousel();
+      });
+
+      /** Handling the previous click event of the carousel */
+      $(`.${styles.control_prev}`).click((e) => {
+        this.stopAutoRotateCarousel();
+        this.showPrev();
+        this.startAutoRotateCarousel();
+      });
+
+      /** Handling the previous enter event of the carousel */
+      $(`.${styles.control_prev}`).mouseenter(() => {
+        this.stopAutoRotateCarousel();
+      });
+
+      /** Handling the previous leave event of the carousel */
+      $(`.${styles.control_prev}`).mouseleave(() => {
+        this.startAutoRotateCarousel();
+      });
+
+      /** Handling the previous enter event of the carousel */
+      $(`.${styles.control_next}`).mouseenter(() => {
+        this.stopAutoRotateCarousel();
+      });
+
+      /** Handling the previous leave event of the carousel */
+      $(`.${styles.control_next}`).mouseleave(() => {
+        this.startAutoRotateCarousel();
+      });
+
+      /** Handling the mouse enter event on the image of the carousel */
+      $(`#legoSlider ul li`).mouseenter(() => {
+        this.stopAutoRotateCarousel();
+      });
+
+      /** Handling the mouse leave event on the image of the carousel */
+      $(`#legoSlider ul li`).mouseleave(() => {
+        this.startAutoRotateCarousel();
+      });
+
+      /** Event registered for the resizing of the window */
+      window.onresize = () => {
+        this.stopAutoRotateCarousel();
+        this.createCarousel(imgdetails, this.props);
+      };
+
+      /** clears the interval so that it does not cause issue  =next time it loads */
+      window.onbeforeunload = () => {
+        this.stopAutoRotateCarousel();
+      };
+    }
+    catch (error) {
+
+    }
+  }
+
+  /** Method  starts the auto rotation of the carousel*/
+  private startAutoRotateCarousel(): void {
+    try {
+
+      if (this.props.autoRotate && this.state.intervalID == 0) {
+
+        this.interval = setInterval(() => {
+          this.showNext();
+        }, this.autoRotateDuration);
+
+        this.state.intervalID = this.interval;
+      }
+    }
+    catch (error) {
+    }
+  }
+
+  /** Method stopes the autoCarousel */
+  private stopAutoRotateCarousel(): void {
+    try {
+      if (this.state.intervalID > 0) {
+        clearInterval(this.state.intervalID);
+        this.setState({ intervalID: 0, showLoading: false });
+      }
+    }
+    catch (error) {
+    }
+  }
+
+  /** Method shows the next image */
+  private showNext(): void {
+
+    try {
+
+      var slideWidth = $('#legoSlider ul li').width();
+      $('#legoSlider ul').animate({
+        left: + slideWidth
+      }, this.animateDuration, 'linear', () => {
+        $('#legoSlider ul li:last-child').prependTo('#legoSlider ul');
+        $('#legoSlider ul').css('left', '');
+      });
+    }
+    catch (error) {
+    }
+  }
+
+  /** Method shows the Previous image */
+  private showPrev(): void {
+
+    try {
+      var slideWidth = $('#legoSlider ul li').width();
+      $('#legoSlider ul').animate({
+        left: - slideWidth
+      }, this.animateDuration, 'linear', () => {
+        $('#legoSlider ul li:first-child').appendTo('#legoSlider ul');
+        $('#legoSlider ul').css('left', '');
+      });
+    }
+    catch (error) {
     }
   }
 

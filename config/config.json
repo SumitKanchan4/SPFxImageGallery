@@ -6,7 +6,9 @@
       "outputPath": "./dist/image-gallery.bundle.js"
     }
   ],
-  "externals": {},
+  "externals": {
+    "jquery": "https://code.jquery.com/jquery-2.1.1.min.js"
+  },
   "localizedResources": {
     "imageGalleryStrings": "webparts/imageGallery/loc/{locale}.js"
   }

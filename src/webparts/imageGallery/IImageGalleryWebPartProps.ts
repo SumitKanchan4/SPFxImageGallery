@@ -4,4 +4,5 @@ export interface IImageGalleryWebPartProps {
   maxImage: string;
   createLink:boolean;
   layout:string;
+  autoRotate:boolean;
 }
