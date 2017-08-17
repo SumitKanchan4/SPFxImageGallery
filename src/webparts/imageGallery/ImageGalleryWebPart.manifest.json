@@ -12,7 +12,7 @@
     "group": { "default": "SPFX by Sumit Kanchan" },
     "title": { "default": "Image Gallery" },
     "description": { "default": "Display the images on your webpart as you want" },
-    "officeFabricIconFontName": "Page",
+    "officeFabricIconFontName": "PhotoCollection",
     "properties": {
       "layout": "Grid"
      }
