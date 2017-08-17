@@ -9,7 +9,7 @@
 
   "preconfiguredEntries": [{
     "groupId": "f5b23167-8553-48a3-8b83-cda1b179d64d",
-    "group": { "default": "SPFX by Sumit Kanchan" },
+    "group": { "default": "SPFx by Sumit Kanchan" },
     "title": { "default": "Image Gallery" },
     "description": { "default": "Display the images on your webpart as you want" },
     "officeFabricIconFontName": "PhotoCollection",
