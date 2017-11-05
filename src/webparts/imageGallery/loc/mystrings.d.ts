@@ -1,10 +1,10 @@
-declare interface IImageGalleryStrings {
+declare interface IImageGalleryWebPartStrings {
   PropertyPaneDescription: string;
   BasicGroupName: string;
   DescriptionFieldLabel: string;
 }
 
-declare module 'imageGalleryStrings' {
-  const strings: IImageGalleryStrings;
+declare module 'ImageGalleryWebPartStrings' {
+  const strings: IImageGalleryWebPartStrings;
   export = strings;
 }

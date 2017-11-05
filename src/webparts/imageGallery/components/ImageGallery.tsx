@@ -69,7 +69,7 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
                               <div className={`ms-Grid-col ${this.getColClass(this.props.imageCountInRow)}`}>
                                 <div className={styles.boxShadow}>
                                   {
-                                    SPHelperCommon.isStringNullOrEmpy(item.redirectLink) ?
+                                    SPHelperCommon.isStringNullOrEmpty(item.redirectLink) ?
                                       <Link>
                                         <Image src={item.imageUrl} role='presentation'></Image>
                                         <div className={`ms-u-hiddenSm ms-font-m-plus ms-fontWeight-semibold ${styles.heading} ${styles.colBlack}`}>{item.title}</div>
@@ -129,7 +129,7 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
                                 <li>
                                   {
                                     // # reloads on IE on click so if there is no link then do not add href (href presence generate a tag else button tag)
-                                    !SPHelperCommon.isStringNullOrEmpy(item.redirectLink) && item.redirectLink != '#' ?
+                                    !SPHelperCommon.isStringNullOrEmpty(item.redirectLink) && item.redirectLink != '#' ?
                                       <Link href={item.redirectLink}>
                                         <Image src={item.imageUrl} role='presentation' />
                                         <div className={styles.text}>{item.title}</div>
@@ -183,7 +183,7 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
                                   {/* Display Image */}
                                   <div className={styles.boxShadow}>
                                     {
-                                      SPHelperCommon.isStringNullOrEmpy(item.redirectLink) || item.redirectLink == '#'
+                                      SPHelperCommon.isStringNullOrEmpty(item.redirectLink) || item.redirectLink == '#'
                                         ?
                                         <Link href={item.redirectLink} target='_blank'>
                                           <Image src={item.imageUrl} role='presentation' />
@@ -200,7 +200,7 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
                                     <div className={`ms-Grid-row`}>
                                       <div className={`ms-Grid-col ms-u-sm12`}>
                                         {
-                                          SPHelperCommon.isStringNullOrEmpy(item.redirectLink) || item.redirectLink == '#'
+                                          SPHelperCommon.isStringNullOrEmpty(item.redirectLink) || item.redirectLink == '#'
                                             ?
                                             <Link>
                                               <h2>{item.title}</h2>
@@ -219,7 +219,7 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
                                       </div>
                                     </div>
                                     {
-                                      !SPHelperCommon.isStringNullOrEmpy(item.redirectLink) || item.redirectLink != '#'
+                                      !SPHelperCommon.isStringNullOrEmpty(item.redirectLink) || item.redirectLink != '#'
                                         ?
                                         <div className={`ms-Grid-row`}>
                                           <div className={`ms-Grid-col ms-u-sm12 ms-hiddenSm`}>
@@ -255,12 +255,12 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
     );
   }
 
-  protected componentWillReceiveProps(nextProps: IImageGalleryProps, nextContext: any): void {
+  public componentWillReceiveProps(nextProps: IImageGalleryProps, nextContext: any): void {
     this.setState({ showLoading: true, imageDetails: [] as any });
     this.getLibItems(nextProps);
   }
 
-  protected componentDidMount(): void {
+  public componentDidMount(): void {
     this.setState({ showLoading: true, imageDetails: [] as any });
     this.getLibItems(this.props);
   }
@@ -273,7 +273,7 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
     try {
 
       this.setState({ showLoading: true, status: 'Fetching Data...' });
-      if (this.validateColumn() && !SPHelperCommon.isStringNullOrEmpy(props.libName)) {
+      if (this.validateColumn() && !SPHelperCommon.isStringNullOrEmpty(props.libName)) {
 
         var query = this.getQuery(props);
         let imgDetails: IImageDetails[] = [];
@@ -284,8 +284,8 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
             imgDetails.push({
               imageUrl: item.File.ServerRelativeUrl,
               redirectLink: this.createRedirectLink ? item.Redirect_x0020_Link : '',
-              title: SPHelperCommon.isStringNullOrEmpy(item.Title) ? '' : item.Title,
-              description: !SPHelperCommon.isStringNullOrEmpy(item.Description) && item.Description.length > 230 ? item.Description.slice(0, 230) + '...' : item.Description
+              title: SPHelperCommon.isStringNullOrEmpty(item.Title) ? '' : item.Title,
+              description: !SPHelperCommon.isStringNullOrEmpty(item.Description) && item.Description.length > 230 ? item.Description.slice(0, 230) + '...' : item.Description
             });
           });
 
@@ -432,23 +432,23 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
 
     switch (count) {
       case 1:
-        return `ms-u-md12`;
+        return `ms-md12`;
       case 2:
-        return `ms-u-md6`;
+        return `ms-md6`;
       case 3:
-        return `ms-u-md4`;
+        return `ms-md4`;
       case 4:
-        return `ms-u-md3`;
+        return `ms-md3`;
       case 5:
       case 6:
       case 7:
-        return `ms-u-md2`;
+        return `ms-md2`;
       case 8:
       case 9:
       case 10:
       case 11:
       case 12:
-        return `ms-u-md1`;
+        return `ms-md1`;
     }
   }
 
@@ -525,7 +525,7 @@ export default class ImageGallery extends React.Component<IImageGalleryProps, II
           this.showNext();
         }, this.autoRotateDuration);
 
-        this.state.intervalID = this.interval;
+        this.setState({ intervalID: this.interval });
       }
     }
     catch (error) {

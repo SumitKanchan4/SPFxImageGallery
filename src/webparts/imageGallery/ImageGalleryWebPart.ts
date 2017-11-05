@@ -13,42 +13,49 @@ import {
   IPropertyPaneChoiceGroupOption
 } from '@microsoft/sp-webpart-base';
 import { SPListOperations, BaseTemplate, SPHelperCommon } from 'spfxhelper';
-
-import * as strings from 'imageGalleryStrings';
+import * as strings from 'ImageGalleryWebPartStrings';
 import ImageGallery from './components/ImageGallery';
 import { IImageGalleryProps } from './components/IImageGalleryProps';
-import { IImageGalleryWebPartProps } from './IImageGalleryWebPartProps';
+
+export interface IImageGalleryWebPartProps {
+  libName: string;
+  imageCountInRow: string;
+  maxImage: string;
+  createLink:boolean;
+  layout:string;
+  autoRotate:boolean;
+}
 
 export default class ImageGalleryWebPart extends BaseClientSideWebPart<IImageGalleryWebPartProps> {
 
-  // flag to check if the lists are fetched
-  private listsFetched: boolean = false;
-  private dropdownOptions: IPropertyPaneDropdownOption[];
-
-  private _choicGroup: IPropertyPaneChoiceGroupOption[];
-  private get choiceOptions(): IPropertyPaneChoiceGroupOption[] {
-
-    if (SPHelperCommon.isNull(this._choicGroup)) {
-      var options: Array<IPropertyPaneChoiceGroupOption> = new Array<IPropertyPaneChoiceGroupOption>();
-
-      let imgCarousel: string = "https://spoprod-a.akamaihd.net/files/sp-client-prod_2017-08-04.008/image_choicegroup_carousel_82b63fce.png";
-      let imgTiles: string = "https://spoprod-a.akamaihd.net/files/sp-client-prod_2017-08-04.008/image_choicegroup_grid_0503466b.png";
-      let imgList:string = 'https://spoprod-a.akamaihd.net/files/sp-client-prod_2017-08-04.008/image_choicegroup_list_f5a84202.png';
-
-      options.push({ checked: true, imageSrc: imgCarousel, key: "Carousel", text: "Carousel", selectedImageSrc: imgCarousel });
-      options.push({ checked: false, imageSrc: imgTiles, key: "Grid", text: "Grid", selectedImageSrc: imgTiles });
-      options.push({ checked: false, imageSrc: imgList, key: "List", text: "List", selectedImageSrc: imgList });
-      this._choicGroup = options;
-    }
-    return this._choicGroup;
-  }
-
-  private get disableRowCount(): boolean {
-    return this.properties.layout == 'Carousel' ? true : false;
-  }
+   // flag to check if the lists are fetched
+   private listsFetched: boolean = false;
+   private dropdownOptions: IPropertyPaneDropdownOption[];
+ 
+   private _choicGroup: IPropertyPaneChoiceGroupOption[];
+   private get choiceOptions(): IPropertyPaneChoiceGroupOption[] {
+ 
+     if (SPHelperCommon.isNull(this._choicGroup)) {
+       var options: Array<IPropertyPaneChoiceGroupOption> = new Array<IPropertyPaneChoiceGroupOption>();
+ 
+       let imgCarousel: string = "https://spoprod-a.akamaihd.net/files/sp-client-prod_2017-08-04.008/image_choicegroup_carousel_82b63fce.png";
+       let imgTiles: string = "https://spoprod-a.akamaihd.net/files/sp-client-prod_2017-08-04.008/image_choicegroup_grid_0503466b.png";
+       let imgList:string = 'https://spoprod-a.akamaihd.net/files/sp-client-prod_2017-08-04.008/image_choicegroup_list_f5a84202.png';
+ 
+       options.push({ checked: true, imageSrc: imgCarousel, key: "Carousel", text: "Carousel", selectedImageSrc: imgCarousel });
+       options.push({ checked: false, imageSrc: imgTiles, key: "Grid", text: "Grid", selectedImageSrc: imgTiles });
+       options.push({ checked: false, imageSrc: imgList, key: "List", text: "List", selectedImageSrc: imgList });
+       this._choicGroup = options;
+     }
+     return this._choicGroup;
+   }
+ 
+   private get disableRowCount(): boolean {
+     return this.properties.layout == 'Carousel' ? true : false;
+   }
 
   public render(): void {
-    const element: React.ReactElement<IImageGalleryProps> = React.createElement(
+    const element: React.ReactElement<IImageGalleryProps > = React.createElement(
       ImageGallery,
       {
         libName: this.properties.libName,
@@ -62,7 +69,6 @@ export default class ImageGalleryWebPart extends BaseClientSideWebPart<IImageGal
       }
     );
 
-    
     ReactDom.render(element, this.domElement);
   }
 
@@ -82,7 +88,7 @@ export default class ImageGalleryWebPart extends BaseClientSideWebPart<IImageGal
   private getImageLibraries(): Promise<IPropertyPaneDropdownOption[]> {
     var options: Array<IPropertyPaneDropdownOption> = new Array<IPropertyPaneDropdownOption>();
 
-    let oListOpr: SPListOperations = SPListOperations.getInstance(this.context.spHttpClient, this.context.pageContext.web.absoluteUrl);
+    let oListOpr: SPListOperations = SPListOperations.getInstance(this.context.spHttpClient as any, this.context.pageContext.web.absoluteUrl);
 
     return oListOpr.getListsDetailsByBaseTemplateID(BaseTemplate.PictureLibrary).then((response) => {
 

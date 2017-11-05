@@ -1,20 +1,26 @@
 {
-  "$schema": "../../../node_modules/@microsoft/sp-module-interfaces/lib/manifestSchemas/jsonSchemas/clientSideComponentManifestSchema.json",
-
+  "$schema": "https://dev.office.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
   "id": "9552dfae-6e06-43f3-867a-4bb2ceac6433",
   "alias": "ImageGalleryWebPart",
   "componentType": "WebPart",
-  "version": "0.0.1",
+
+  // The "*" signifies that the version should be taken from the package.json
+  "version": "*",
   "manifestVersion": 2,
 
+  // If true, the component can only be installed on sites where Custom Script is allowed.
+  // Components that allow authors to embed arbitrary script code should set this to true.
+  // https://support.office.com/en-us/article/Turn-scripting-capabilities-on-or-off-1f2c515f-5d7e-448a-9fd7-835da935584f
+  "requiresCustomScript": false,
+
   "preconfiguredEntries": [{
-    "groupId": "f5b23167-8553-48a3-8b83-cda1b179d64d",
+    "groupId": "5c03119e-3074-46fd-976b-c60198311f70", // Other
     "group": { "default": "SPFx by Sumit Kanchan" },
     "title": { "default": "Image Gallery" },
     "description": { "default": "Display the images on your webpart as you want" },
     "officeFabricIconFontName": "PhotoCollection",
     "properties": {
       "layout": "Grid"
-     }
+    }
   }]
 }

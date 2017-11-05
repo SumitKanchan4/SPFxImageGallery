@@ -12,6 +12,7 @@ lib
 solution
 temp
 *.sppkg
+.vscode
 
 # Coverage directory used by tools like istanbul
 coverage
