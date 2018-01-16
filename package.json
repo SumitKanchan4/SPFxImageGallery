@@ -24,7 +24,7 @@
     "@microsoft/sp-office-ui-fabric-core": "~1.3.4",
     "@types/webpack-env": ">=1.12.1 <1.14.0",
     "jquery": "^3.2.1",
-    "spfxhelper": "^1.4.0"
+    "spfxhelper": "^1.5.1"
   },
   "devDependencies": {
     "@microsoft/sp-build-web": "~1.3.4",
