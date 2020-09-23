@@ -1,5 +1,5 @@
 ## Image Gallery Webpart for SharePoint Framework
-[![SharePoint Framework Helper](/Images/SP.png?raw=true "SharePoint Framework Helper" )](http://sharepointwidgets.blogspot.com)
+[![SharePoint Framework Image Gallery](/Images/SP.png?raw=true "SharePoint Framework Helper" )](http://sharepointwidgets.blogspot.com)
 
 This webpart will allow you to create a image gallery with lot of options.
 
