@@ -1,0 +1,95 @@
+@import "~office-ui-fabric-react/dist/sass/References.scss";
+
+.lightbox {
+    .row {
+        @include ms-Grid-row;
+
+        > div {
+            padding: 10px 0;
+        }
+    }
+
+    .boxShadow {
+        position: relative;
+        -moz-box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+        -webkit-box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+        padding: 5px;
+        background: white;
+        border: 0;
+        width: 100%;
+        max-width: 90%;
+        transition: 2;
+        border-radius: 6px;
+
+        img {
+            width: 100%;
+        }
+    }
+
+    .boxShadow:hover .overlay {
+        bottom: 0;
+        height: 100%;
+      }
+
+    .heading {
+        text-align: center;
+        color: white;
+        font-size: 20px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+
+    .overlay {
+        position: absolute;
+        bottom: 100%;
+        left: 0;
+        right: 0;
+        background-color: black;
+        opacity: 0.8;
+        overflow: hidden;
+        width: 100%;
+        height:0;
+        transition: .5s ease;
+      }
+
+    .colBlack {
+        color: white;
+    }
+
+    .col1 {
+        @include ms-sm12;
+        @include ms-md12;
+        float: left;
+    }
+
+    .col2 {
+        @include ms-md6;
+        @include ms-sm12;
+        float: left;
+    }
+
+    .col3 {
+        @include ms-md4;
+        @include ms-sm12;
+        float: left;
+    }
+
+    .col4 {
+        @include ms-md3;
+        @include ms-sm12;
+        float: left;
+    }
+
+    .captionContainer {
+        text-align: center;
+        background-color: black;
+        padding: 2px 16px;
+        color: white;
+    }
+}

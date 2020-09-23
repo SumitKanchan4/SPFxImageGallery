@@ -1,11 +1,14 @@
 {
-  "$schema": "https://dev.office.com/json-schemas/spfx-build/package-solution.schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
   "solution": {
-    "name": "Image Gallery By Sumit Kanchan",
+    "name": "spfxImageGallery",
+    "title": "SPFx Image Gallery By Sumit Kanchan",
     "id": "c0c5969b-18bb-4226-ade3-77af0e63c5d8",
-    "version": "2.0.0.0"
+    "version": "2.0.0.0",
+    "includeClientSideAssets": true,
+    "isDomainIsolated": false
   },
   "paths": {
-    "zippedPackage": "solution/image-gallery.sppkg"
+    "zippedPackage": "solution/spfx-image-gallery.sppkg"
   }
 }

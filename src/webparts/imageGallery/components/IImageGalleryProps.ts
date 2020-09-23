@@ -1,26 +1,48 @@
-interface IImageGalleryProps {
-  libName: string;
-  imageCountInRow: number;
-  maxImage: number;
-  createLink: boolean;
-  spHttpClient: any;
+import { SPHttpClient } from '@microsoft/sp-http';
+import { IPropertyPaneAccessor } from '@microsoft/sp-webpart-base';
+
+export interface IImageGalleryProps {
+  layout: string;
+  spHttpClient: SPHttpClient;
+  loggerName: string;
   webUrl: string;
-  layout:string;
-  autoRotate:boolean;
+  listName: string;
+  colCount: number;
+  isAutorotate: boolean;
+  duration: number;
+  imagesCount: number;
+  propertyPane: IPropertyPaneAccessor;
 }
 
-interface IImageDetails {
-  title: string;
-  imageUrl: string;
-  redirectLink?: string;
-  description?:string;
+export interface IImageDetails {
+  info: IImageDetail[];
 }
 
-interface IImageState {
-  imageDetails?: any[];
-  showLoading: boolean;
-  status?:string;
-  intervalID?: number;
+export interface IImageDetail {
+  name: string;
+  redirectLink: string;
+  caption: string;
+  path: string;
+  description?: string;
 }
 
-export { IImageGalleryProps, IImageDetails, IImageState };
+export interface IImageGalleryState {
+  imageCount?: number;
+  imageInfo?: IImageDetails;
+}
+
+export class Constants {
+
+  
+  public static get CaroselMax() : number {
+    return 10;
+  }
+
+  public static get ListMax() : number {
+    return 25;
+  }
+
+  public static get LightboxMax() : number {
+    return 50;
+  }
+}

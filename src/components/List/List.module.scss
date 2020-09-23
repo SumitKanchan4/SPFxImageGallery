@@ -1,0 +1,65 @@
+@import "~office-ui-fabric-react/dist/sass/References.scss";
+.list {
+    .listContainer {
+        margin: 0px auto;
+        width: 100%;
+    }
+    .boxShadow {
+        position: relative;
+        -moz-box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+        -webkit-box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+        padding: 5px;
+        background: white;
+        border: 0;
+        width: 100%;
+        max-width: 90%;
+        transition: 2;
+        border-radius: 6px;
+        margin: 0 0 10px 0;
+        img {
+            width: 100%;
+        }
+    }
+    img {
+        max-width: 100%;
+    }
+    h2 {
+        margin: 0 0 5px 0;
+    }
+    .fRight {
+        float: right;
+    }
+    .width100 {
+        width: 100%;
+    }
+
+    .grid{
+        @include ms-Grid;
+    }
+
+    .row{
+        @include ms-Grid-row;
+    }
+
+    .col5{
+        @include ms-Grid-col;
+        @include ms-sm5;
+    }
+
+    .col7{
+        @include ms-Grid-col;
+        @include ms-sm7  ;
+    }
+
+    .col12{
+        @include ms-Grid-col;
+        @include ms-sm12;
+    }
+
+    .desc{
+        max-height: 98px;
+        height: 98px;
+        overflow: hidden;
+    }
+}

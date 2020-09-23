@@ -1,168 +1,229 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
-import { Version } from '@microsoft/sp-core-library';
+import { Log, Version } from '@microsoft/sp-core-library';
 import {
-  BaseClientSideWebPart,
   IPropertyPaneConfiguration,
   PropertyPaneTextField,
-  IPropertyPaneDropdownOption,
-  PropertyPaneDropdown,
+  PropertyPaneChoiceGroup,
   PropertyPaneSlider,
   PropertyPaneToggle,
-  PropertyPaneChoiceGroup,
-  IPropertyPaneChoiceGroupOption
-} from '@microsoft/sp-webpart-base';
-import { SPListOperations, BaseTemplate, SPHelperCommon } from 'spfxhelper';
-import * as strings from 'ImageGalleryWebPartStrings';
+  IPropertyPaneGroup,
+  PropertyPaneLabel,
+  PropertyPaneDropdown,
+  IPropertyPaneDropdownOption
+} from '@microsoft/sp-property-pane';
+import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
+import { SPListOperations, BaseTemplate, ISPBaseResponse } from 'spfxhelper';
 import ImageGallery from './components/ImageGallery';
-import { IImageGalleryProps } from './components/IImageGalleryProps';
+import { Constants, IImageGalleryProps } from './components/IImageGalleryProps';
+
+const LOGS: string = "SPFxImageGallery";
 
 export interface IImageGalleryWebPartProps {
-  libName: string;
-  imageCountInRow: string;
-  maxImage: string;
-  createLink:boolean;
-  layout:string;
-  autoRotate:boolean;
+  layout: string;
+  colCount: number;
+  isAutorotate: boolean;
+  duration: number;
+  listName: string;
+  imagesCount: number;
+  currentSite: boolean;
+  siteUrl: string;
 }
 
 export default class ImageGalleryWebPart extends BaseClientSideWebPart<IImageGalleryWebPartProps> {
 
-   // flag to check if the lists are fetched
-   private listsFetched: boolean = false;
-   private dropdownOptions: IPropertyPaneDropdownOption[];
- 
-   private _choicGroup: IPropertyPaneChoiceGroupOption[];
-   private get choiceOptions(): IPropertyPaneChoiceGroupOption[] {
- 
-     if (SPHelperCommon.isNull(this._choicGroup)) {
-       var options: Array<IPropertyPaneChoiceGroupOption> = new Array<IPropertyPaneChoiceGroupOption>();
- 
-       let imgCarousel: string = "https://spoprod-a.akamaihd.net/files/sp-client-prod_2017-08-04.008/image_choicegroup_carousel_82b63fce.png";
-       let imgTiles: string = "https://spoprod-a.akamaihd.net/files/sp-client-prod_2017-08-04.008/image_choicegroup_grid_0503466b.png";
-       let imgList:string = 'https://spoprod-a.akamaihd.net/files/sp-client-prod_2017-08-04.008/image_choicegroup_list_f5a84202.png';
- 
-       options.push({ checked: true, imageSrc: imgCarousel, key: "Carousel", text: "Carousel", selectedImageSrc: imgCarousel });
-       options.push({ checked: false, imageSrc: imgTiles, key: "Grid", text: "Grid", selectedImageSrc: imgTiles });
-       options.push({ checked: false, imageSrc: imgList, key: "List", text: "List", selectedImageSrc: imgList });
-       this._choicGroup = options;
-     }
-     return this._choicGroup;
-   }
- 
-   private get disableRowCount(): boolean {
-     return this.properties.layout == 'Carousel' ? true : false;
-   }
+  public libsOptions: IPropertyPaneDropdownOption[] = [];
+
 
   public render(): void {
-    const element: React.ReactElement<IImageGalleryProps > = React.createElement(
+
+    if (!this.properties.listName)
+      this.getLibraries(this.properties.siteUrl ? this.properties.siteUrl : this.context.pageContext.web.absoluteUrl);
+
+    const element: React.ReactElement<IImageGalleryProps> = React.createElement(
       ImageGallery,
       {
-        libName: this.properties.libName,
-        imageCountInRow: parseInt(this.properties.imageCountInRow),
-        maxImage: parseInt(this.properties.maxImage),
-        createLink: this.properties.createLink,
-        spHttpClient: this.context.spHttpClient,
-        webUrl: this.context.pageContext.web.absoluteUrl,
         layout: this.properties.layout,
-        autoRotate: this.properties.autoRotate
+        spHttpClient: this.context.spHttpClient,
+        loggerName: LOGS,
+        webUrl: this.properties.siteUrl ? this.properties.siteUrl : this.context.pageContext.web.absoluteUrl,
+        listName: this.properties.listName,
+        colCount: this.properties.colCount,
+        isAutorotate: this.properties.isAutorotate,
+        duration: this.properties.duration * 1000,
+        imagesCount: this.properties.imagesCount,
+        propertyPane: this.context.propertyPane
       }
     );
 
     ReactDom.render(element, this.domElement);
   }
 
+  protected onDispose(): void {
+    ReactDom.unmountComponentAtNode(this.domElement);
+  }
+
   protected get dataVersion(): Version {
     return Version.parse('1.0');
   }
 
-  private validateInput(value: string): string {
-    if (/^[0-9]{1,10}$/.test(value)) {
-      return '';
-    }
-    else {
-      return 'Please enter digit only';
-    }
+  public onPropertyPaneFieldChanged(propertyPath: string, oldValue: any, newValue: any): void {
+
+
+    switch (propertyPath) {
+      case `currentSite`:
+        this.properties.siteUrl = newValue as boolean ? this.context.pageContext.web.absoluteUrl : `https://`;
+        this.getLibraries(this.properties.siteUrl);
+        break;
+      case `siteUrl`:
+        this.getLibraries(newValue);
+        break;
+      default:
+        this.getLibraries(this.properties.siteUrl);
+        break;
+    }    
   }
 
-  private getImageLibraries(): Promise<IPropertyPaneDropdownOption[]> {
-    var options: Array<IPropertyPaneDropdownOption> = new Array<IPropertyPaneDropdownOption>();
+  /**
+   * Retreives the libraries from the url and returns error if any
+   * @param siteUrl site url to get libraries from
+   */
+  private async getLibraries(siteUrl: string): Promise<string> {
 
-    let oListOpr: SPListOperations = SPListOperations.getInstance(this.context.spHttpClient as any, this.context.pageContext.web.absoluteUrl);
+    let options: IPropertyPaneDropdownOption[] = [];
+    let errorMessage: string = undefined;
 
-    return oListOpr.getListsDetailsByBaseTemplateID(BaseTemplate.PictureLibrary).then((response) => {
+    try {
 
+      let spListOps: SPListOperations = new SPListOperations(this.context.spHttpClient, siteUrl, LOGS);
+
+      let response: ISPBaseResponse = await spListOps.getListsDetailsByBaseTemplateID(BaseTemplate.DocumentLibrary);
       if (response.ok) {
-        response.result.value.forEach(element => {
-          options.push({ key: element.Title, text: element.Title });
+
+        response.result.value.forEach(libs => {
+          options.push({ key: libs["Title"], text: libs["Title"] });
         });
       }
-      return Promise.resolve(options);
+      else {
+        errorMessage = `Invalid site URL`;
+        options = [];
+      }
+    }
+    catch (error) {
+      Log.error(LOGS, new Error(`Invalid site`));
+      Log.error(LOGS, error);
+      options = [];
+    }
+
+    this.libsOptions = options;
+    this.context.propertyPane.refresh();
+    return errorMessage;
+  }
+
+  /**
+   * Returns the property pane controls for the carousel
+   */
+  protected get getCarouselConfigurationControls(): IPropertyPaneGroup {
+
+    let grp: IPropertyPaneGroup = {
+      groupName: `Configure Auto-rotate`,
+      groupFields: [
+        PropertyPaneToggle('isAutorotate', { label: `Select Autorotation`, offText: 'Off', onText: 'On' }),
+        PropertyPaneSlider('duration', { max: 10, min: 2, label: `Select the duration for autorotation (in sec)`, disabled: !this.properties.isAutorotate }),
+        PropertyPaneSlider('imagesCount', { max: Constants.CaroselMax, min: -1, label: `Select the maximum number of images to be displayed` })
+      ]
+    };
+    return grp;
+  }
+
+  /**
+   * Returns the property pane controls for the List
+   */
+  protected get getListConfigurationControls(): IPropertyPaneGroup {
+
+    let grp: IPropertyPaneGroup = {
+      groupName: `Configure List`,
+      groupFields: [
+        PropertyPaneSlider('imagesCount', { max: Constants.ListMax, min: -1, label: `Select the maximum number of images to be displayed` }),
+        PropertyPaneSlider('colCount', { max: 4, min: 2, label: `Select the maximum number of images to be displayed in a row` })
+      ]
+    };
+    return grp;
+  }
+
+  /**
+   * Returns the property pane controls for the LightBox
+   */
+  protected get getLightBoxConfigurationControls(): IPropertyPaneGroup {
+
+    let grp: IPropertyPaneGroup = {
+      groupName: `Configure Lighbox`,
+      groupFields: [
+        PropertyPaneSlider('colCount', { max: 4, min: 1, label: `Select the number of columns`, value: 3 }),
+        PropertyPaneSlider('imagesCount', { max: Constants.LightboxMax, min: -1, label: `Select the maximum number of images to be displayed`, value: -1 }),
+        PropertyPaneLabel('', { text: '*Select the value as -1 to display all the images' })
+      ]
+    };
+    return grp;
+  }
+
+  /**
+   * Checks for the valid URL
+   * @param value values entered in the site url text box in property pane
+   */
+  private getErrorMessage(value: string): Promise<string> {
+
+    return this.getLibraries(value).then(msg => {
+      return msg;
     });
+  }
 
+  /**
+   * Returns the property pane controls for the source configuration
+   */
+  protected get getSourceConfiguration(): IPropertyPaneGroup {
 
+    let grp: IPropertyPaneGroup = {
+      groupName: `Select Source`,
+      groupFields: [
+        PropertyPaneToggle('currentSite', { label: `Source of images`, onText: `Current Site`, offText: `Other Site`, offAriaLabel: `Other Site`, onAriaLabel: `Current Site`, checked: true }),
+        PropertyPaneTextField('siteUrl', { onGetErrorMessage: (value) => this.getErrorMessage(value), underlined: true, placeholder: `${this.properties.currentSite ? this.context.pageContext.web.absoluteUrl : 'Enter Site Url'}`, disabled: this.properties.currentSite }),
+        PropertyPaneDropdown('listName', { options: this.libsOptions, label: `Select Library`, disabled: this.libsOptions.length == 0, selectedKey: this.properties.listName })
+      ]
+    };
+
+    return grp;
   }
 
   protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
-
-    if (!this.listsFetched) {
-
-      this.getImageLibraries().then((response) => {
-        this.dropdownOptions = response;
-        this.listsFetched = true;
-        // now refresh the property pane.
-        this.context.propertyPane.refresh();
-        this.onDispose();
-      });
-    }
-
     return {
       pages: [
         {
           header: {
-            description: strings.PropertyPaneDescription
+            description: `SPFx Image Gallery Configuration`
           },
           groups: [
+            this.getSourceConfiguration,
             {
-              groupName: strings.BasicGroupName,
+              groupName: `Select Layout`,
               groupFields: [
-                PropertyPaneDropdown('libName', {
-                  label: 'Enter the name of the library',
-                  options: this.dropdownOptions
-                }),
                 PropertyPaneChoiceGroup('layout', {
-                  label: 'Layout',
-                  options: this.choiceOptions
-                }),
-                PropertyPaneSlider('imageCountInRow', {
-                  label: "Select the max number of images in a row",
-                  max: 6,
-                  min: 1,
-                  step: 1,
-                  showValue: true,
-                  value: 3,
-                  disabled: this.properties.layout != 'Grid'
-                }),
-                PropertyPaneTextField('maxImage', {
-                  label: 'Enter the max images to be shown (0 to show all)',
-                  onGetErrorMessage: this.validateInput.bind(this),
-                  value: '0'
-                }),
-                PropertyPaneToggle('createLink', {
-                  label: 'Create redirect link',
-                  checked: true,
-                  offText: 'No redirect link will be created on the image',
-                  onText: 'To create a redirect link need to have a "Redirect" (single line of text) column in the library'
-                }),
-                PropertyPaneToggle('autoRotate', {
-                  label: 'Autorotates the carousel',
-                  checked: true,
-                  offText: 'Autorotate  Off',
-                  onText: 'Autorotate On',
-                  disabled: this.properties.layout != 'Carousel'
+                  options: [
+                    { key: 'carousel', text: 'Carousel', imageSrc: `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAATFJREFUWAljYBgFAxwCjMbGxv8H0g1MA2k5yG4WmAPOnj3LCGPTg4aF/ICHwKgDRkNgcIeAmZmZCa2zJNYQ8PT0ZAfm00t///49DXSEPrmOAJqxDpTfTUxMenGZgeEABwcHjtevXx8CatBlZGT0OnXq1EVcmgmJAwu3IKCajv///xcBHdGCTT2GAz5//vwcqMEMZPmZM2e2Y9NEihjQjCqg+g1AM6uBjshG14vhADExMQmgopNADduAGvzRNZDCb2hoYAKasRKoJwCIU4GOmYquH8MB27dv/6mkpGQHDIHzQEdsoCQNbN68+QDQwlCgWVHA6JiDbjmYD0okIIxN0tzc3AKbODXEYPZihACy4SdPnjyBzKcFG68DaGEhupmjDhgNgQEPgdFmOXq2HOWPvBAAANZ5W4HFvWNLAAAAAElFTkSuQmCC`, selectedImageSrc: `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAATFJREFUWAljYBgFAxwCjMbGxv8H0g1MA2k5yG4WmAPOnj3LCGPTg4aF/ICHwKgDRkNgcIeAmZmZCa2zJNYQ8PT0ZAfm00t///49DXSEPrmOAJqxDpTfTUxMenGZgeEABwcHjtevXx8CatBlZGT0OnXq1EVcmgmJAwu3IKCajv///xcBHdGCTT2GAz5//vwcqMEMZPmZM2e2Y9NEihjQjCqg+g1AM6uBjshG14vhADExMQmgopNADduAGvzRNZDCb2hoYAKasRKoJwCIU4GOmYquH8MB27dv/6mkpGQHDIHzQEdsoCQNbN68+QDQwlCgWVHA6JiDbjmYD0okIIxN0tzc3AKbODXEYPZihACy4SdPnjyBzKcFG68DaGEhupmjDhgNgQEPgdFmOXq2HOWPvBAAANZ5W4HFvWNLAAAAAElFTkSuQmCC` },
+                    { key: 'list', text: 'List', iconProps: { officeFabricIconFontName: 'GroupedList' } },
+                    { key: 'lightbox', text: 'LightBox', iconProps: { officeFabricIconFontName: 'GridViewSmall' } }
+                  ]
                 })
               ]
-            }
+            },
+            this.properties.layout === 'carousel' ?
+              this.getCarouselConfigurationControls
+              :
+              this.properties.layout === 'list' ?
+                this.getListConfigurationControls
+                :
+                this.getLightBoxConfigurationControls
+
           ]
         }
       ]

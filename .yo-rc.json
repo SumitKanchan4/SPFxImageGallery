@@ -1,8 +1,12 @@
 {
   "@microsoft/generator-sharepoint": {
-    "libraryName": "image-gallery",
-    "framework": "react",
-    "version": "1.0.2",
-    "libraryId": "c0c5969b-18bb-4226-ade3-77af0e63c5d8"
+    "isCreatingSolution": true,
+    "environment": "spo",
+    "version": "1.10.0",
+    "libraryName": "spfx-image-gallery",
+    "libraryId": "c824d785-bfb9-4c45-885d-4c85bc35d4b6",
+    "packageManager": "npm",
+    "isDomainIsolated": false,
+    "componentType": "webpart"
   }
 }
