@@ -1,5 +1,5 @@
 ## Image Gallery Webpart for SharePoint Framework
-[![SharePointWidgets.com](/Images/SP.png "SharePointWidgets.com" )](https://www.sharepointwidgets.com/)
+[![SharePointWidgets.com](/Images/SPFxImageGallery.png "SharePointWidgets.com" )](https://www.sharepointwidgets.com/)
 
 This webpart will allow you to create a image gallery with lot of options. These are beautiful galleries options with responsiveness and configurations.
 
