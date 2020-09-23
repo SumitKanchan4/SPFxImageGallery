@@ -1,5 +1,9 @@
 ## Image Gallery Webpart for SharePoint Framework
-
+![Applies to](https://img.shields.io/badge/applies%20to-SharePoint%20Onlne-green)
+![spfx version](https://img.shields.io/badge/spfx%20version-1.11-green)
+[![GitHub issues](https://img.shields.io/github/issues/SumitKanchan4/SPFxImageGallery?style=plastic)](https://github.com/SumitKanchan4/SPFxImageGallery/issues)
+[![GitHub forks](https://img.shields.io/github/forks/SumitKanchan4/SPFxImageGallery?style=plastic)](https://github.com/SumitKanchan4/SPFxImageGallery/network)
+[![GitHub stars](https://img.shields.io/github/stars/SumitKanchan4/SPFxImageGallery?style=plastic)](https://github.com/SumitKanchan4/SPFxImageGallery/stargazers)
 ----
 
 [![SharePointWidgets.com](/Images/SPFxImageGallery.png?width=100px)](https://www.sharepointwidgets.com/)
