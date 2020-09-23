@@ -1,5 +1,5 @@
 ## Image Gallery Webpart for SharePoint Framework
-[![SharePointWidgets.com](/Images/SPFxImageGallery.png "SharePointWidgets.com" )](https://www.sharepointwidgets.com/)
+[![SharePointWidgets.com](/Images/SPFxImageGallery.png?width=100px)](https://www.sharepointwidgets.com/)
 
 This webpart will allow you to create a image gallery with lot of options. These are beautiful galleries options with responsiveness and configurations.
 
@@ -26,7 +26,7 @@ In this webpart, there are 3 types of gallery views, which will help you in desi
 ### Lightbox Layout Screen
 
 This layout is a flexible layout where multiple images can be displayed in a small area. You have the option to choose the number of images in a row, which will make more configurable to suite your needs and ofcourse you have the option to choose the number of images as well. Below is the glimpse of it. 
-![SharePoint Framework Image Gallery - Lightbox layout](/Images/lightbox.png?raw=true "Lightbox layout")
+![SharePoint Framework Image Gallery - Lightbox layout](/Images/Lightbox.png?raw=true "Lightbox layout")
 
 
 
@@ -34,7 +34,7 @@ This layout is a flexible layout where multiple images can be displayed in a sma
 ### Carousel Layout Screen
 New improved carousel effect, which makes it more appealing. Choose from the option to auto-rotate or keep it manual. Displays the number of items in the carousel and choose the speed of the auto-rotation.
 
-![SharePoint Framework Image Carousel](/Images/carousel.png?raw=true "Carousel Layout")
+![SharePoint Framework Image Carousel](/Images/Carousel.png?raw=true "Carousel Layout")
 
 
 
@@ -43,7 +43,7 @@ New improved carousel effect, which makes it more appealing. Choose from the opt
 ### List Layout Screen
 This layout is more informative with an image to attract the type of information. Create redirect link to navigate user if they want to know more.
 
-![SharePoint Framework Image List Gallery](/Images/list.png?raw=true "List Layout")
+![SharePoint Framework Image List Gallery](/Images/List.png?raw=true "List Layout")
 
 
 
