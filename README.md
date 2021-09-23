@@ -33,6 +33,7 @@ In this webpart, there are 3 types of gallery views, which will help you in desi
 ### Lightbox Layout Screen
 
 This layout is a flexible layout where multiple images can be displayed in a small area. You have the option to choose the number of images in a row, which will make more configurable to suite your needs and ofcourse you have the option to choose the number of images as well. Below is the glimpse of it. 
+
 ![SharePoint Framework Image Gallery - Lightbox layout](/Images/Lightbox.png?raw=true "Lightbox layout")
 
 
@@ -60,7 +61,7 @@ This layout is more informative with an image to attract the type of information
  **Document library** with below columns
 
 | Column Internal Name | Column Type            |
-|----------------------|------------------------|
+| -------------------- | ---------------------- |
 | Enable               | Yes/No                 |
 | Description          | Multiple lines of text |
 | RedirectLink         | Single line of text    |
@@ -81,9 +82,10 @@ This layout is more informative with an image to attract the type of information
 ## About
  
 
-| Version | Date        | Author        |
-|---------|-------------|---------------|
-| 2.0.0.0 | 23 Sep 2020 | Sumit Kanchan |
+| Version | Date        | Author        | Change Log                     |
+| ------- | ----------- | ------------- | ------------------------------ |
+| 2.0.0.0 | 23 Sep 2020 | Sumit Kanchan | Updated to spfx version 1.11.0 |
+| 2.1.0.0 | 23 Sep 2021 | Sumit Kanchan | Updated to spfx version 1.12.1 |
 
 
 ## Disclaimer
