@@ -2,7 +2,7 @@
   "@microsoft/generator-sharepoint": {
     "isCreatingSolution": true,
     "environment": "spo",
-    "version": "1.10.0",
+    "version": "1.12.1",
     "libraryName": "spfx-image-gallery",
     "libraryId": "c824d785-bfb9-4c45-885d-4c85bc35d4b6",
     "packageManager": "npm",

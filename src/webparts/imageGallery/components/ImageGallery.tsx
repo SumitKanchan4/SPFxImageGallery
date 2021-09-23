@@ -7,7 +7,6 @@ import { List } from '../../../components/List/List';
 import { SPListOperations } from 'spfxhelper';
 import { IListItemsResponse } from 'spfxhelper/dist/SPFxHelper/Props/ISPListProps';
 import { Log } from '@microsoft/sp-core-library';
-import { Label } from 'office-ui-fabric-react/lib/Label';
 import { PrimaryButton } from 'office-ui-fabric-react/lib/Button';
 
 
